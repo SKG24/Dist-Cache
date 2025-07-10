@@ -1,0 +1,67 @@
+---
+version: '3.8'
+
+services:
+  distcache-node1:
+    build: .
+    container_name: distcache-node1
+    ports:
+      - "6379:6379"
+      - "8080:8080"
+    volumes:
+      - node1_data:/data
+    environment:
+      - NODE_ID=node-1
+      - CLUSTER_NODES=distcache-node1,distcache-node2,distcache-node3
+    networks:
+      - distcache-net
+    restart: unless-stopped
+
+  distcache-node2:
+    build: .
+    container_name: distcache-node2
+    ports:
+      - "6380:6379"
+      - "8081:8080"
+    volumes:
+      - node2_data:/data
+    environment:
+      - NODE_ID=node-2
+      - CLUSTER_NODES=distcache-node1,distcache-node2,distcache-node3
+    networks:
+      - distcache-net
+    restart: unless-stopped
+
+  distcache-node3:
+    build: .
+    container_name: distcache-node3
+    ports:
+      - "6381:6379"
+      - "8082:8080"
+    volumes:
+      - node3_data:/data
+    environment:
+      - NODE_ID=node-3
+      - CLUSTER_NODES=distcache-node1,distcache-node2,distcache-node3
+    networks:
+      - distcache-net
+    restart: unless-stopped
+
+  # Optional: Redis CLI for testing
+  redis-cli:
+    image: redis:alpine
+    container_name: distcache-cli
+    networks:
+      - distcache-net
+    command: tail -f /dev/null
+    profiles:
+      - tools
+
+volumes:
+  node1_data:
+  node2_data:
+  node3_data:
+
+networks:
+  distcache-net:
+    driver: bridge
