@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "cluster/HashRing.h"
+#include <unordered_map>
+#include <vector>
 
 class HashRingTest : public ::testing::Test {
 protected:

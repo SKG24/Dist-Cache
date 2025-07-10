@@ -1,6 +1,7 @@
 #include "WAL.h"
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 WAL::WAL(const std::string& filename) : filename_(filename) {
     ensure_file_open();

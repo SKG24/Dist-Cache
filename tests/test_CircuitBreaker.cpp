@@ -2,6 +2,7 @@
 #include <thread>
 #include <chrono>
 #include "patterns/CircuitBreaker.h"
+#include <vector>
 
 TEST(CircuitBreakerTest, ClosedStateAllowsRequests) {
     CircuitBreaker cb(3, 1000);

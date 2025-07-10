@@ -3,6 +3,7 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <vector>
 
 // Include core components for basic testing
 #include "storage/LRUCache.h"

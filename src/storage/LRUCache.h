@@ -6,6 +6,7 @@
 #include <shared_mutex>
 #include <chrono>
 #include <atomic>
+#include <vector>
 
 class LRUCache {
 public:
