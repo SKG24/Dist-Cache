@@ -1,3 +1,6 @@
+#============================================================================
+# CMakeLists.txt - Fixed Root CMake Configuration (Minimal Change)
+#============================================================================
 cmake_minimum_required(VERSION 3.16)
 project(DistCache VERSION 1.0.0 LANGUAGES CXX)
 
@@ -53,9 +56,9 @@ if(MSGPACK_INCLUDE_DIR)
     include_directories(${MSGPACK_INCLUDE_DIR})
 endif()
 
-# Add subdirectories
+# Add subdirectories - FIXED: Changed "benchmarks" to "benchmark"
 add_subdirectory(src)
-add_subdirectory(benchmarks)
+add_subdirectory(benchmark)
 add_subdirectory(tests)
 
 # Print configuration summary

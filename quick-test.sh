@@ -17,6 +17,29 @@ echo "🧹 Cleaning up previous deployments..."
 docker-compose down -v --remove-orphans 2>/dev/null || true
 docker system prune -f 2>/dev/null || true
 
+#!/bin/bash
+# quick-fix.sh - Apply minimal fix and test
+
+echo "🔧 Applying minimal CMake fix..."
+
+# The fix: Change "benchmarks" to "benchmark" in CMakeLists.txt
+sed -i.bak 's/add_subdirectory(benchmarks)/add_subdirectory(benchmark)/g' CMakeLists.txt
+
+echo "✅ Fixed CMakeLists.txt"
+
+# Test Docker build
+echo "🧪 Testing Docker build..."
+docker-compose build distcache-node1
+
+if [ $? -eq 0 ]; then
+    echo "✅ Docker build successful!"
+    echo "🚀 Starting deployment..."
+    docker-compose up -d
+else
+    echo "❌ Build still failing"
+    exit 1
+fi
+
 # Build and deploy
 echo "🔨 Building and deploying DistCache..."
 docker-compose build --no-cache
@@ -35,6 +58,7 @@ if ! docker-compose ps | grep -q "Up"; then
 fi
 
 echo -e "${GREEN}✅ All containers are running${NC}"
+
 
 # Test basic functionality
 echo "🧪 Testing basic cache operations..."
