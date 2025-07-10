@@ -22,8 +22,12 @@ public:
     
     void broadcast_heartbeat();
     void listen_for_heartbeats();
-    void start_discovery();
-    void stop_discovery();
+    void start_discovery() { 
+        std::cout << "[Discovery] Starting discovery for " << node_id_ << "\n";
+    }
+    void stop_discovery() { 
+        std::cout << "[Discovery] Stopping discovery for " << node_id_ << "\n";
+    }
     
     std::vector<NodeInfo> get_alive_nodes() const;
     bool is_node_alive(const std::string& node_id) const;
@@ -37,12 +41,8 @@ private:
     std::map<std::string, NodeInfo> known_nodes_;
     mutable std::mutex nodes_mutex_;
     
-    std::thread heartbeat_thread_;
-    std::thread listener_thread_;
-    std::atomic<bool> running_{false};
-    
     void cleanup_dead_nodes();
     void simulate_heartbeat_exchange();
-    static constexpr int HEARTBEAT_INTERVAL_MS = 5000; // 5 seconds
-    static constexpr int NODE_TIMEOUT_MS = 15000; // 15 seconds
+    static constexpr int HEARTBEAT_INTERVAL_MS = 5000;
+    static constexpr int NODE_TIMEOUT_MS = 15000;
 };
