@@ -1,9 +1,14 @@
 #include "MetricsCollector.h"
 #include <sstream>
 #include <iomanip>
+#include <atomic>
 
 void MetricsCollector::record_latency(double ms) {
-    total_latency_ += ms;
+    // Fix atomic += operation
+    double current = total_latency_.load();
+    while (!total_latency_.compare_exchange_weak(current, current + ms)) {
+        // Retry if another thread modified the value
+    }
     request_count_++;
 }
 
