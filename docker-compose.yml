@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   distcache-node1:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: distcache-node1
     ports:
       - "6379:6379"
@@ -16,14 +18,16 @@ services:
       - distcache-net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'PING' | nc -w 1 localhost 6379 || exit 1"]
+      test: ["CMD", "sh", "-c", "echo 'PING' | timeout 5 nc localhost 6379 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
 
   distcache-node2:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: distcache-node2
     ports:
       - "6380:6379"
@@ -39,14 +43,16 @@ services:
     depends_on:
       - distcache-node1
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'PING' | nc -w 1 localhost 6379 || exit 1"]
+      test: ["CMD", "sh", "-c", "echo 'PING' | timeout 5 nc localhost 6379 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
 
   distcache-node3:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: distcache-node3
     ports:
       - "6381:6379"
@@ -62,11 +68,11 @@ services:
     depends_on:
       - distcache-node1
     healthcheck:
-      test: ["CMD", "sh", "-c", "echo 'PING' | nc -w 1 localhost 6379 || exit 1"]
+      test: ["CMD", "sh", "-c", "echo 'PING' | timeout 5 nc localhost 6379 || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 60s
 
 volumes:
   node1_data:

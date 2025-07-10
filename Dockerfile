@@ -7,21 +7,20 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
-    pkg-config \
     git \
+    wget \
     libmsgpack-dev \
-    libgtest-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Build Google Test (required for Ubuntu 22.04)
-RUN cd /usr/src/gtest && \
-    cmake . && \
-    make && \
-    cp lib/*.a /usr/lib && \
-    cd /usr/src/gmock && \
-    cmake . && \
-    make && \
-    cp lib/*.a /usr/lib
+# Install GTest from source (more reliable than system packages)
+RUN cd /tmp && \
+    git clone https://github.com/google/googletest.git && \
+    cd googletest && \
+    mkdir build && cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX=/usr/local .. && \
+    make -j$(nproc) && \
+    make install && \
+    cd / && rm -rf /tmp/googletest
 
 # Set working directory
 WORKDIR /app
@@ -41,7 +40,7 @@ FROM ubuntu:22.04
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
     libmsgpack-dev \
-    netcat \
+    netcat-openbsd \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd -r distcache && useradd -r -g distcache distcache
 
@@ -49,6 +48,9 @@ RUN apt-get update && apt-get install -y \
 COPY --from=builder /app/build/distcache /usr/local/bin/
 COPY --from=builder /app/build/run_benchmark /usr/local/bin/
 COPY --from=builder /app/build/run_tests /usr/local/bin/
+
+# Make binaries executable
+RUN chmod +x /usr/local/bin/distcache /usr/local/bin/run_benchmark /usr/local/bin/run_tests
 
 # Create data directory
 RUN mkdir -p /data && chown distcache:distcache /data
@@ -61,8 +63,8 @@ WORKDIR /data
 EXPOSE 6379 8080
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD echo "PING" | nc -w 1 localhost 6379 || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD echo "PING" | timeout 5 nc localhost 6379 || exit 1
 
 # Default command
 CMD ["distcache"]

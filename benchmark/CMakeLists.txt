@@ -1,6 +1,14 @@
-add_executable(run_benchmark
-    benchmark.cpp
+#============================================================================
+# benchmarks/CMakeLists.txt - Benchmark Configuration
+#============================================================================
+# Benchmark executable
+add_executable(run_benchmark benchmark.cpp)
+target_link_libraries(run_benchmark PRIVATE distcache_core)
+
+# Set benchmark properties
+set_target_properties(run_benchmark PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
-target_include_directories(run_benchmark PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_link_libraries(run_benchmark distcache_core)
+# Install benchmark
+install(TARGETS run_benchmark DESTINATION bin)
