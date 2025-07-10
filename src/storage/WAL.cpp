@@ -1,5 +1,6 @@
 #include "WAL.h"
 #include <iostream>
+#include <sstream>
 
 WAL::WAL(const std::string& filename) : filename_(filename) {
     ensure_file_open();
@@ -33,6 +34,8 @@ void WAL::append(const std::string& operation, const std::string& key, const std
 }
 
 void WAL::append_binary(const std::string& op, const std::string& key, const std::string& value) {
+    // Fallback to text format if msgpack is not available
+    #ifdef HAVE_MSGPACK
     std::lock_guard<std::mutex> lock(wal_mutex_);
     ensure_file_open();
     
@@ -42,25 +45,37 @@ void WAL::append_binary(const std::string& op, const std::string& key, const std
     
     wal_file_.write(data.data(), data.size());
     wal_file_.flush();
+    #else
+    // Use text format as fallback
+    append(op, key, value);
+    #endif
 }
 
 std::vector<std::tuple<std::string, std::string, std::string>> WAL::replay() {
     std::ifstream in(filename_);
     std::vector<std::tuple<std::string, std::string, std::string>> ops;
     
+    if (!in.is_open()) {
+        return ops; // Return empty vector if file doesn't exist
+    }
+    
     std::string line;
     while (std::getline(in, line)) {
+        if (line.empty()) continue;
+        
         std::istringstream iss(line);
         std::string op, key, value;
         
         iss >> op >> key;
-        if (iss >> value) {
-            // Has value
-            ops.emplace_back(op, key, value);
-        } else {
-            // No value (e.g., DEL operation)
-            ops.emplace_back(op, key, "");
+        // Get the rest of the line as value (may contain spaces)
+        std::getline(iss, value);
+        
+        // Trim leading space from value
+        if (!value.empty() && value[0] == ' ') {
+            value = value.substr(1);
         }
+        
+        ops.emplace_back(op, key, value);
     }
     
     return ops;

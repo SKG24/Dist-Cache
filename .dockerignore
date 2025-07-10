@@ -1,0 +1,16 @@
+.git
+.gitignore
+README.md
+Overview.txt
+result.txt
+*.md
+.DS_Store
+.vscode
+.idea
+build/
+*.log
+*.dat
+.dockerignore
+Dockerfile
+docker-compose.yml
+*.sh
