@@ -7,16 +7,31 @@ A high-performance distributed key-value store built in C++ featuring consistent
 ![Performance](https://img.shields.io/badge/performance-664K%20ops%2Fsec-brightgreen)
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
 
+---
+
+## Result SS
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img1.png)
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img2.png)
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img3.png)
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img4.png)
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img5.png)
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img6.png)
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img7.png)
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img8.png)
+
  ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img9.png)
- ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/imggit -10.png)
+
+ ![screenshot](https://github.com/SKG24/Dist-Cache/blob/main/screenshot_results/img10.png)
+
+---
 
 ## ✨ Features
 
