@@ -44,13 +44,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd -r distcache && useradd -r -g distcache distcache
 
-# Copy built binaries
-COPY --from=builder /app/build/distcache /usr/local/bin/
+# Copy built binaries - UPDATED NAMES
+COPY --from=builder /app/build/dist-cache /usr/local/bin/
 COPY --from=builder /app/build/run_benchmark /usr/local/bin/
 COPY --from=builder /app/build/run_tests /usr/local/bin/
 
 # Make binaries executable
-RUN chmod +x /usr/local/bin/distcache /usr/local/bin/run_benchmark /usr/local/bin/run_tests
+RUN chmod +x /usr/local/bin/dist-cache /usr/local/bin/run_benchmark /usr/local/bin/run_tests
 
 # Create data directory
 RUN mkdir -p /data && chown distcache:distcache /data
@@ -66,5 +66,5 @@ EXPOSE 6379 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD echo "PING" | timeout 5 nc localhost 6379 || exit 1
 
-# Default command
-CMD ["distcache"]
+# Default command - UPDATED NAME
+CMD ["dist-cache"]

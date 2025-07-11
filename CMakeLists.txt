@@ -53,21 +53,14 @@ if(MSGPACK_INCLUDE_DIR)
     include_directories(${MSGPACK_INCLUDE_DIR})
 endif()
 
-# Add subdirectories - FIXED: Changed "benchmarks" to "benchmark"
+# Add subdirectories - these create their own executables
 add_subdirectory(src)
 add_subdirectory(benchmark)
 add_subdirectory(tests)
 
-# === ADD MAIN EXECUTABLE - THIS WAS MISSING ===
-add_executable(distcache main.cpp)
-target_link_libraries(distcache PRIVATE distcache_core)
-
-# Also create benchmark and test executables at top level for convenience
-add_executable(run_benchmark benchmark/benchmark.cpp)
-target_link_libraries(run_benchmark PRIVATE distcache_core)
-
-add_executable(run_tests tests/minimal_test.cpp)
-target_link_libraries(run_tests PRIVATE distcache_core)
+# === MAIN EXECUTABLE - RENAMED TO AVOID CONFLICT ===
+add_executable(dist-cache main.cpp)
+target_link_libraries(dist-cache PRIVATE distcache_core)
 
 # Print configuration summary
 message(STATUS "")
@@ -77,6 +70,7 @@ message(STATUS "C++ Standard:    ${CMAKE_CXX_STANDARD}")
 message(STATUS "msgpack Support: ${HAVE_MSGPACK}")
 message(STATUS "GTest Support:   ${HAVE_GTEST}")
 message(STATUS "Install Prefix:  ${CMAKE_INSTALL_PREFIX}")
-message(STATUS "Executables:     distcache, run_benchmark, run_tests")
+message(STATUS "Main Executable: dist-cache")
 message(STATUS "====================================")
 message(STATUS "")
+
